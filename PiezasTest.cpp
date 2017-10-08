@@ -14,7 +14,16 @@ class PiezasTest : public ::testing::Test
 		virtual void TearDown(){} //clean up after each test, (before destructor) 
 };
 
-TEST(PiezasTest, sanityCheck)
+TEST(PiezasTest, observeReset)
 {
-	ASSERT_TRUE(true);
+	Piezas test;
+	//asserted = test.gameState();
+	/*
+	for(int i=0; i<4; i++) //column itterator
+		test.dropPiece(i);
+	EXPECT_EQ(asserted, test.gameState());
+	asserted = Invalid;
+	test.reset();
+	*/
+	EXPECT_EQ(true, true);
 }
