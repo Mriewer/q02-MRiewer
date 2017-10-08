@@ -21,10 +21,8 @@ class PiezasTest : public ::testing::Test
 TEST(PiezasTest, improperInput)
 {
 	Piezas test;
-	Piece asserted;
-	asserted = Invalid;
-	EXPECT_EQ(asserted, test.dropPiece(-1));
-	EXPECT_EQ(asserted, test.dropPiece(5));
+	EXPECT_EQ(Invalid, test.dropPiece(-1));
+	EXPECT_EQ(Invalid, test.dropPiece(5));
 }
 
 /**
@@ -33,10 +31,8 @@ TEST(PiezasTest, improperInput)
 TEST(PiezasTest, willToggle)
 {
 	Piezas test;
-	Piece asserted;
-	asserted = O;
 	test.dropPiece(0);
-	EXPECT_EQ(asserted, test.dropPiece(0));
+	EXPECT_EQ(O, test.dropPiece(0));
 }
 
 /**
@@ -46,13 +42,26 @@ TEST(PiezasTest, willToggle)
 TEST(PiezasTest, observeCatGame)
 {
 	Piezas test;
-	Piece asserted;
-	asserted = Blank;
 	for(int i=0; i<3; i++)
 		for(int j=0; j<4; j++) //column itterator
 			test.dropPiece(j);
-	EXPECT_EQ(asserted, test.gameState());
+	EXPECT_EQ(Blank, test.gameState());
 }
+
+/**
+ * This test observes functionality of pieceAt
+**/
+TEST(PiezasTest, observePieceAt)
+{
+	Piezas test;
+	test.dropPiece(0);
+	EXPECT_EQ(X, test.pieceAt(0,0)); // runs through as X turn
+	test.dropPiece(0);
+	EXPECT_EQ(O, test.pieceAt(1,0)); // runs through as O turn
+	EXPECT_EQ(Invalid, test.pieceAt(-1,0));
+	EXPECT_EQ(Invalid, test.pieceAt(1,5));
+}
+
 
 /**
  * This test generates a full column and then places another piece
@@ -61,11 +70,10 @@ TEST(PiezasTest, observeCatGame)
 TEST(PiezasTest, observeDropOverflow)
 {
 	Piezas test;
-	Piece asserted;
-	asserted = Blank;
 	for(int i=0; i<3; i++)
 		test.dropPiece(0);
-	EXPECT_EQ(asserted, test.dropPiece(0));
+	EXPECT_EQ(Blank, test.dropPiece(0)); // runs through as O turn
+	EXPECT_EQ(Blank, test.dropPiece(0)); // runs through as X turn
 }
 
 /**
@@ -77,13 +85,10 @@ TEST(PiezasTest, observeDropOverflow)
 TEST(PiezasTest, observeReset)
 {
 	Piezas test;
-	Piece asserted;
-	asserted = Blank;
 	for(int i=0; i<3; i++)
 		for(int j=0; j<4; j++) //column itterator
 			test.dropPiece(j);
-	EXPECT_EQ(asserted, test.gameState());
-	asserted = Invalid;
+	EXPECT_EQ(Blank, test.gameState());
 	test.reset();
-	EXPECT_EQ(test.gameState(), asserted);
+	EXPECT_EQ(Invalid, test.gameState());
 }
