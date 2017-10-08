@@ -54,7 +54,7 @@ Piece Piezas::dropPiece(int column)
     Piece place1 = turn;
     if(column > BOARD_COLS - 1 || column < 0)
         return Invalid;
-    for(int i=0; i<BOARD_COLS; i++)
+    for(int i=0; i<BOARD_ROWS; i++)
         if(board[i][column] == Blank) {
             board[i][column] = turn;
             if(turn == X)
