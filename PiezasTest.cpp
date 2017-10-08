@@ -15,6 +15,60 @@ class PiezasTest : public ::testing::Test
 };
 
 /**
+ * This test places in an Invalid column
+ *	It then uses checks for proper response
+**/
+TEST(PiezasTest, improperInput)
+{
+	Piezas test;
+	Piece asserted;
+	asserted = Invalid;
+	EXPECT_EQ(asserted, test.dropPiece(-1));
+	EXPECT_EQ(asserted, test.dropPiece(5));
+}
+
+/**
+ * This test takes one turn and expects a turn toggle
+**/
+TEST(PiezasTest, willToggle)
+{
+	Piezas test;
+	Piece asserted;
+	asserted = O;
+	test.dropPiece(0);
+	EXPECT_EQ(asserted, test.dropPiece(0));
+}
+
+/**
+ * This test generates a cats game and expects a proper
+ *	response from gameState
+**/
+TEST(PiezasTest, observeCatGame)
+{
+	Piezas test;
+	Piece asserted;
+	asserted = Blank;
+	for(int i=0; i<3; i++)
+		for(int j=0; j<4; j++) //column itterator
+			test.dropPiece(j);
+	EXPECT_EQ(asserted, test.gameState());
+}
+
+/**
+ * This test generates a full column and then places another piece
+ *  this will toggle dropPiece to return Blank
+**/
+TEST(PiezasTest, observeDropOverflow)
+{
+	Piezas test;
+	Piece asserted;
+	asserted = Blank;
+	for(int i=0; i<3; i++)
+		test.dropPiece(0);
+	EXPECT_EQ(asserted, test.dropPiece(0));
+}
+
+/**
  * This test generates a cats game which is tested in gameState
  *	the first test on gameState returns there is a cat game
  * Then there is a reset and the gameState checks once again, but
@@ -33,4 +87,3 @@ TEST(PiezasTest, observeReset)
 	test.reset();
 	EXPECT_EQ(test.gameState(), asserted);
 }
-
