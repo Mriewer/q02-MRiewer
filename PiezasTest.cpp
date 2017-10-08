@@ -77,6 +77,45 @@ TEST(PiezasTest, observeDropOverflow)
 }
 
 /**
+ * This test generates a row win for X
+**/
+TEST(PiezasTest, observeRowWin)
+{
+	Piezas test;
+	for(int i=0; i<3; i++) {
+		test.dropPiece(i);
+		test.dropPiece(i);
+	}
+	test.dropPiece(3); // places X to get 4 in a row
+	for(int i=0; i<4; i++) {
+		test.dropPiece(i);
+	}
+	test.dropPiece(3); // places O in last spot
+	EXPECT_EQ(X, test.gameState());
+}
+
+/**
+ * This test generates a column win for O
+**/
+TEST(PiezasTest, observeColumnWin)
+{
+	Piezas test;
+	test.dropPiece(1); // place X at 0,1
+	for(int i=0; i<4; i++)
+		test.dropPiece(i);
+	test.dropPiece(0); // place O at 1,0
+	test.dropPiece(2); // place X at 1,2
+	test.dropPiece(0); // place O at 2,0 - completes win
+	// below just fill in board
+	test.dropPiece(2); // place X at 2,2
+	test.dropPiece(1); // place O at 2,1
+	test.dropPiece(2); // X gives up turn to prevent CAT
+	test.dropPiece(3); // place O at 1,3
+	test.dropPiece(3); // place X at 2,3
+	EXPECT_EQ(O, test.gameState());
+}
+
+/**
  * This test generates a cats game which is tested in gameState
  *	the first test on gameState returns there is a cat game
  * Then there is a reset and the gameState checks once again, but
