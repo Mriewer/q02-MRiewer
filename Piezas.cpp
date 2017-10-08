@@ -22,6 +22,12 @@
 **/
 Piezas::Piezas()
 {
+    turn = X;
+    for(int i=0; i<BOARD_ROWS; i++) {
+        //board[i].resize(BOARD_COLS);
+        for(int j=0; j<BOARD_COLS; j++)
+            board[i].push_back(Blank);
+    }
 }
 
 /**
@@ -30,6 +36,9 @@ Piezas::Piezas()
 **/
 void Piezas::reset()
 {
+    for(int i=0; i<BOARD_ROWS; i++)
+        for(int j=0; j<BOARD_COLS; j++)
+            board[i][j] = Blank;
 }
 
 /**
@@ -42,6 +51,22 @@ void Piezas::reset()
 **/ 
 Piece Piezas::dropPiece(int column)
 {
+    Piece place1 = turn;
+    if(column > BOARD_COLS - 1 || column < 0)
+        return Invalid;
+    for(int i=0; i<BOARD_COLS; i++)
+        if(board[i][column] == Blank) {
+            board[i][column] = turn;
+            if(turn == X)
+                turn = O;
+            else 
+                turn = X;
+            return place1;
+        }
+    if(turn == X)
+        turn = O;
+    else 
+        turn = X;
     return Blank;
 }
 
@@ -51,7 +76,9 @@ Piece Piezas::dropPiece(int column)
 **/
 Piece Piezas::pieceAt(int row, int column)
 {
-    return Blank;
+    if(column > BOARD_COLS - 1 || column < 0 || row > BOARD_ROWS -1 || row < 0)
+        return Invalid;
+    return board[row][column];
 }
 
 /**
@@ -62,8 +89,50 @@ Piece Piezas::pieceAt(int row, int column)
  * the most adjacent pieces in a single line. Lines can go either vertically
  * or horizontally. If both X's and O's have the same max number of pieces in a
  * line, it is a tie.
+ * 
+ * NO DIAGONAL WINS
+ * 
 **/
 Piece Piezas::gameState()
 {
+    int x_count=0, o_count=0;
+    for(int i=0; i<BOARD_ROWS; i++)
+        for(int j=0; j<BOARD_COLS; j++)
+            if(board[i][j] == Blank)
+                return Invalid;
+    for(int i=0; i<BOARD_ROWS; i++) {
+        int x_row=0, o_row=0;
+        for(int j=1; j<BOARD_COLS; j++) {
+            if(board[i][j] == board[i][j-1]) {
+                if(board[i][j] == X)
+                    x_row++;
+                else
+                    o_row++;
+            }
+        }
+        if(x_row > x_count)
+            x_count = x_row;
+        if(o_row > o_count)
+            o_count = o_row;
+    }
+    for(int j=0; j<BOARD_COLS; j++) {
+        int x_col=0, o_col=0;
+        for(int i=1; i<BOARD_ROWS; i++) {
+            if(board[i][j] == board[i-1][j]) {
+                if(board[i][j] == X)
+                    x_col++; 
+                else
+                    o_col++; 
+            }
+        }
+        if(x_col > x_count)
+            x_count = x_col;
+        if(o_col > o_count)
+            o_count = o_col;
+    }
+    if(x_count > o_count)
+        return X;
+    else if(o_count > x_count)
+        return O;
     return Blank;
 }
